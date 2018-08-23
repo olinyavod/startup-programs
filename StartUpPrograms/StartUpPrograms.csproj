@@ -64,6 +64,8 @@
     <Compile Include="Commands\IAsyncCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Converters\AutoRunTypeToImageSourceConverter.cs" />
+    <Compile Include="Converters\AutoRunTypeToStringConverter.cs" />
     <Compile Include="Converters\FilePathToImageSourceConverter.cs" />
     <Compile Include="Providers\IAutoRunFinder.cs" />
     <Compile Include="Providers\IProgramItemFactory.cs" />
@@ -111,6 +113,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\RegEdit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\StartMenu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Schedule.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArgumentsColumn" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
   <data name="CancelButton" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -144,10 +147,22 @@
   <data name="RefreshMenu" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="Registry" xml:space="preserve">
+    <value>Registry</value>
+  </data>
   <data name="ScanComplited" xml:space="preserve">
     <value>Scan complited.</value>
   </data>
   <data name="ScanError" xml:space="preserve">
     <value>Error!</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="SourceColumn" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="StartMenu" xml:space="preserve">
+    <value>Start menu</value>
   </data>
 </root>

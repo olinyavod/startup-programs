@@ -17,6 +17,8 @@
 	<Window.Resources>
 		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 		<converters:FilePathToImageSourceConverter x:Key="FilePathToImageSourceConverter"/>
+		<converters:AutoRunTypeToImageSourceConverter x:Key="AutoRunTypeToImageSourceConverter"/>
+		<converters:AutoRunTypeToStringConverter x:Key="AutoRunTypeToStringConverter"/>
 	</Window.Resources>
 	<DockPanel>
 		<Menu DockPanel.Dock="Top">
@@ -65,8 +67,23 @@
 						</GridViewColumn>
 						<GridViewColumn Header="{x:Static props:Resources.NameColumn}"
 						                DisplayMemberBinding="{Binding Name}"/>
+						<GridViewColumn Header="{x:Static props:Resources.ArgumentsColumn}"
+						                DisplayMemberBinding="{Binding Arguments}"/>
 						<GridViewColumn Header="{x:Static props:Resources.PathColumn}"
 						                DisplayMemberBinding="{Binding FullFilePath}"/>
+						<GridViewColumn Header="{x:Static props:Resources.SourceColumn}"
+						                Width="25">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type viewModels:ProgramItemViewModel}">
+									<Image Height="16"
+									       Width="16"
+									       VerticalAlignment="Center"
+									       HorizontalAlignment="Center"
+									       Source="{Binding AutoRunType, Converter={StaticResource AutoRunTypeToImageSourceConverter}}"
+									       ToolTip="{Binding AutoRunType, Converter={StaticResource AutoRunTypeToStringConverter}}"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
 					</GridView.Columns>
 				</GridView>
 			</ListView.View>

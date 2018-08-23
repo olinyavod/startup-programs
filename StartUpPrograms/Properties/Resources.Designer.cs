@@ -61,6 +61,15 @@ namespace StartUpPrograms.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Arguments.
+        /// </summary>
+        public static string ArgumentsColumn {
+            get {
+                return ResourceManager.GetString("ArgumentsColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Cancel.
         /// </summary>
         public static string CancelButton {
@@ -142,6 +151,15 @@ namespace StartUpPrograms.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Registry.
+        /// </summary>
+        public static string Registry {
+            get {
+                return ResourceManager.GetString("Registry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Scan complited..
         /// </summary>
         public static string ScanComplited {
@@ -156,6 +174,33 @@ namespace StartUpPrograms.Properties {
         public static string ScanError {
             get {
                 return ResourceManager.GetString("ScanError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Schedule.
+        /// </summary>
+        public static string Schedule {
+            get {
+                return ResourceManager.GetString("Schedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Source.
+        /// </summary>
+        public static string SourceColumn {
+            get {
+                return ResourceManager.GetString("SourceColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Start menu.
+        /// </summary>
+        public static string StartMenu {
+            get {
+                return ResourceManager.GetString("StartMenu", resourceCulture);
             }
         }
     }
