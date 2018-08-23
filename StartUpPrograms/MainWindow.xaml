@@ -1,0 +1,75 @@
+﻿<Window x:Class="StartUpPrograms.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StartUpPrograms"
+        xmlns:viewModels="clr-namespace:StartUpPrograms.ViewModels"
+        xmlns:props="clr-namespace:StartUpPrograms.Properties"
+        xmlns:converters="clr-namespace:StartUpPrograms.Converters"
+        mc:Ignorable="d"
+		d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
+        Title="MainWindow" Height="450" Width="800">
+	<Window.InputBindings>
+		<KeyBinding Key="F5"
+		            Command="{Binding RefreshListCommand}"/>
+	</Window.InputBindings>
+	<Window.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		<converters:FilePathToImageSourceConverter x:Key="FilePathToImageSourceConverter"/>
+	</Window.Resources>
+	<DockPanel>
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="{x:Static props:Resources.FileMenu}">
+				<MenuItem Header="{x:Static props:Resources.ExitMenu}"
+				          InputGestureText="Alt+F4"/>
+			</MenuItem>
+			<MenuItem Header="{x:Static props:Resources.ListMenu}">
+				<MenuItem Header="{x:Static props:Resources.RefreshMenu}"
+				          Command="{Binding RefreshListCommand}"
+				          InputGestureText="F5"/>
+			</MenuItem>
+		</Menu>
+		<StatusBar DockPanel.Dock="Bottom">
+			<StatusBarItem Content="{Binding CurrentStatus}"/>
+			<StatusBarItem Content="{Binding RefreshListCommand}"
+			               Visibility="{Binding RefreshListCommand.IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
+				<StatusBarItem.ContentTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<ProgressBar IsIndeterminate="False"
+							             Width="120"/>
+							<Button Margin="5, 0"
+									Command="{Binding CancelCommand}"
+							        Content="{x:Static props:Resources.CancelButton}"/>
+						</StackPanel>
+						
+					</DataTemplate>
+				</StatusBarItem.ContentTemplate>
+			</StatusBarItem>
+		</StatusBar>
+		<ListView ItemsSource="{Binding ItemsSource}">
+			<ListView.View>
+				<GridView>
+					<GridView.Columns>
+						<GridViewColumn Width="25">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type viewModels:ProgramItemViewModel}">
+									<Image Width="16"
+									       Height="16"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"
+									       Source="{Binding FullFilePath, Converter={StaticResource FilePathToImageSourceConverter}}"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn Header="{x:Static props:Resources.NameColumn}"
+						                DisplayMemberBinding="{Binding Name}"/>
+						<GridViewColumn Header="{x:Static props:Resources.PathColumn}"
+						                DisplayMemberBinding="{Binding FullFilePath}"/>
+					</GridView.Columns>
+				</GridView>
+			</ListView.View>
+		</ListView>
+    </DockPanel>
+</Window>
