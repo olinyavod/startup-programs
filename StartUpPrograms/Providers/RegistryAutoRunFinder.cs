@@ -32,17 +32,26 @@ namespace StartUpPrograms.Providers
 				Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"),
 				Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\RunOnce")
 			};
-
-			foreach (var key in keys)
+			try
 			{
-				if(_tokenSource.IsCancellationRequested)
-					return;
-				_onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
-				var list = await Task.Run(() => GetFromRegistry(key).ToArray(), _tokenSource.Token);
-				key.Close();
-				foreach (var item in list)
+				foreach (var key in keys)
 				{
-					collection.Add(item);
+					if (_tokenSource.IsCancellationRequested)
+						return;
+					_onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
+					var list = await Task.Run(() => GetFromRegistry(key).ToArray(), _tokenSource.Token);
+
+					foreach (var item in list)
+					{
+						collection.Add(item);
+					}
+				}
+			}
+			finally
+			{
+				foreach (var key in keys)
+				{
+					key.Dispose();
 				}
 			}
 		}
@@ -79,10 +88,6 @@ namespace StartUpPrograms.Providers
 				
 				if (File.Exists(path))
 					yield return _factory.Create(path, args, AutoRunType.Registry);
-				else
-				{
-
-				}
 			}
 		}
 

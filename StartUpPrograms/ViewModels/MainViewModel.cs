@@ -48,6 +48,7 @@ namespace StartUpPrograms.ViewModels
 			var finders = new IAutoRunFinder[]
 			{
 				new RegistryAutoRunFinder(RefreshListCommand.CancellationTokenSource, factory),
+				new StartMenuAutoRunFinder(RefreshListCommand.CancellationTokenSource, factory), 
 			};
 			try
 			{
