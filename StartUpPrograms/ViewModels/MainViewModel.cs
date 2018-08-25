@@ -73,7 +73,7 @@ namespace StartUpPrograms.ViewModels
 			try
 			{
 				ItemsSource = new ObservableCollection<ProgramItemViewModel>();
-				await RunRefresh();
+				await Task.WhenAll(_finders.Select(RunRefresh));
 				CurrentStatus = Properties.Resources.ScanComplited;
 			}
 			catch (OperationCanceledException)
@@ -87,26 +87,23 @@ namespace StartUpPrograms.ViewModels
 			}
 		}
 
-		Task RunRefresh()
+		Task RunRefresh(IAutoRunFinder finder)
 		{
 			var tcs = new TaskCompletionSource<bool>();
 
-			var thread = new Thread(() =>
+			var thread = new Thread(state =>
 			{
 				try
 				{
-					foreach (var finder in _finders)
-					{
-						_currentFinder = finder;
-						_mainDispatcher.BeginInvoke(new Action<IEnumerable<ProgramItemViewModel>>(items =>
+					var f = (IAutoRunFinder) state;
+					_mainDispatcher.BeginInvoke(new Action<IEnumerable<ProgramItemViewModel>>(items =>
+						{
+							foreach (var i in items)
 							{
-								foreach (var i in items)
-								{
-									ItemsSource.Add(i);
-								}
-							}),
-							finder.Run().ToList());
-					}
+								ItemsSource.Add(i);
+							}
+						}),
+						f.Run().ToList());
 
 					tcs.TrySetResult(true);
 				}
@@ -127,7 +124,7 @@ namespace StartUpPrograms.ViewModels
 				IsBackground = true
 			};
 			thread.SetApartmentState(ApartmentState.STA);
-			thread.Start();
+			thread.Start(finder);
 
 			return tcs.Task;
 		}
@@ -136,12 +133,15 @@ namespace StartUpPrograms.ViewModels
 
 		private bool OnCanCancel()
 		{
-			return _currentFinder != null;
+			return RefreshListCommand.IsExecuting;
 		}
 
 		private void OnCancel()
 		{
-			_currentFinder.Stop();
+			foreach (var finder in _finders)
+			{
+				finder.Stop();
+			}
 		}
 
 		public ICommand OpenFolderCommand { get; }
