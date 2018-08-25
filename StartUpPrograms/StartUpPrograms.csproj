@@ -74,6 +74,7 @@
     <Compile Include="Providers\IProgramItemFactory.cs" />
     <Compile Include="Providers\ProgramItemFactory.cs" />
     <Compile Include="Providers\RegistryAutoRunFinder.cs" />
+    <Compile Include="Providers\SchedulerAutoRunFInder.cs" />
     <Compile Include="Providers\ShortcutHelper.cs" />
     <Compile Include="Providers\StartMenuAutoRunFinder.cs" />
     <Compile Include="ViewModels\AutoRunType.cs" />
@@ -141,6 +142,18 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+    <COMReference Include="TaskScheduler">
+      <Guid>{E34CB9F1-C7F7-424C-BE29-027DCC09363A}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Certificate.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

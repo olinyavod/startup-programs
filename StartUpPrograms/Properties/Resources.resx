@@ -120,6 +120,9 @@
   <data name="ArgumentsColumn" xml:space="preserve">
     <value>Arguments</value>
   </data>
+  <data name="AuthorColumn" xml:space="preserve">
+    <value>Author</value>
+  </data>
   <data name="CancelButton" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="FileMenu" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="HasCertificate" xml:space="preserve">
+    <value>Certificate</value>
   </data>
   <data name="ListMenu" xml:space="preserve">
     <value>List</value>

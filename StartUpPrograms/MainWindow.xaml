@@ -66,10 +66,13 @@
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
 						<GridViewColumn Header="{x:Static props:Resources.NameColumn}"
+										Width="150"
 						                DisplayMemberBinding="{Binding Name}"/>
 						<GridViewColumn Header="{x:Static props:Resources.ArgumentsColumn}"
+										Width="100"
 						                DisplayMemberBinding="{Binding Arguments}"/>
 						<GridViewColumn Header="{x:Static props:Resources.PathColumn}"
+										Width="300"
 						                DisplayMemberBinding="{Binding FullFilePath}"/>
 						<GridViewColumn Header="{x:Static props:Resources.SourceColumn}"
 						                Width="25">
@@ -84,7 +87,24 @@
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
-					</GridView.Columns>
+						<GridViewColumn Header="{x:Static props:Resources.HasCertificate}"
+						                Width="25">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type viewModels:ProgramItemViewModel}">
+									<Image Width="16"
+									       Height="16"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"
+										   Visibility="{Binding HasCertificate, Converter={StaticResource BooleanToVisibilityConverter}}"
+									       Source="/Images/Certificate.png"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn Header="{x:Static props:Resources.AuthorColumn}"
+						                Width="100"
+						                DisplayMemberBinding="{Binding Company}"/>
+
+</GridView.Columns>
 				</GridView>
 			</ListView.View>
 		</ListView>

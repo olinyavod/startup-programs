@@ -49,6 +49,7 @@ namespace StartUpPrograms.ViewModels
 			{
 				new RegistryAutoRunFinder(RefreshListCommand.CancellationTokenSource, factory),
 				new StartMenuAutoRunFinder(RefreshListCommand.CancellationTokenSource, factory), 
+				new SchedulerAutoRunFInder(RefreshListCommand.CancellationTokenSource, factory), 
 			};
 			try
 			{

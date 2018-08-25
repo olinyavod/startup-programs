@@ -29,16 +29,14 @@ namespace StartUpPrograms.Providers
 				Environment.GetFolderPath(Environment.SpecialFolder.Startup),
 				Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup)
 			};
-			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+			var scheduler = System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext();
 			
-
 			foreach (var key in directories)
 			{
 				if (_tokenSource.IsCancellationRequested)
 					return;
 				_onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
 				var list = await Task.Factory.StartNew(x => GetFromDirectory(x.ToString()).ToArray(), key, _tokenSource.Token, TaskCreationOptions.RunContinuationsAsynchronously, scheduler);
-
 				foreach (var item in list)
 				{
 					collection.Add(item);

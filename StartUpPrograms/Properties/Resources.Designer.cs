@@ -70,6 +70,15 @@ namespace StartUpPrograms.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Author.
+        /// </summary>
+        public static string AuthorColumn {
+            get {
+                return ResourceManager.GetString("AuthorColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Cancel.
         /// </summary>
         public static string CancelButton {
@@ -111,6 +120,15 @@ namespace StartUpPrograms.Properties {
         public static string FileMenu {
             get {
                 return ResourceManager.GetString("FileMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Certificate.
+        /// </summary>
+        public static string HasCertificate {
+            get {
+                return ResourceManager.GetString("HasCertificate", resourceCulture);
             }
         }
         
