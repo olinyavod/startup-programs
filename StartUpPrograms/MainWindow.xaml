@@ -70,6 +70,7 @@
 									       Height="16"
 										   VerticalAlignment="Center"
 										   HorizontalAlignment="Center"
+										   x:Name="PART_Icon"
 									       Source="{Binding FullFilePath, Converter={StaticResource FilePathToImageSourceConverter}}"/>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
@@ -102,10 +103,18 @@
 								<DataTemplate DataType="{x:Type viewModels:ProgramItemViewModel}">
 									<Image Width="16"
 									       Height="16"
+										   x:Name="PART_Icon"
 										   VerticalAlignment="Center"
 										   HorizontalAlignment="Center"
 										   Visibility="{Binding HasCertificate, Converter={StaticResource BooleanToVisibilityConverter}}"
+										   ToolTip="{x:Static props:Resources.HasCertificateDescription}"
 									       Source="/Images/Certificate.png"/>
+									<DataTemplate.Triggers>
+										<DataTrigger Binding="{Binding IsVerify}" Value="True">
+											<Setter TargetName="PART_Icon" Property="Source" Value="/Images/Verify.png"/>
+											<Setter TargetName="PART_Icon" Property="ToolTip" Value="{x:Static props:Resources.HasVerifyCertificateDescription}"/>
+										</DataTrigger>
+									</DataTemplate.Triggers>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>

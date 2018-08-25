@@ -133,6 +133,24 @@ namespace StartUpPrograms.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Certificated.
+        /// </summary>
+        public static string HasCertificateDescription {
+            get {
+                return ResourceManager.GetString("HasCertificateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Verify certificate.
+        /// </summary>
+        public static string HasVerifyCertificateDescription {
+            get {
+                return ResourceManager.GetString("HasVerifyCertificateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на List.
         /// </summary>
         public static string ListMenu {

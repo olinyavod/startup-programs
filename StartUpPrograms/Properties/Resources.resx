@@ -141,6 +141,12 @@
   <data name="HasCertificate" xml:space="preserve">
     <value>Certificate</value>
   </data>
+  <data name="HasCertificateDescription" xml:space="preserve">
+    <value>Certificated</value>
+  </data>
+  <data name="HasVerifyCertificateDescription" xml:space="preserve">
+    <value>Verify certificate</value>
+  </data>
   <data name="ListMenu" xml:space="preserve">
     <value>List</value>
   </data>

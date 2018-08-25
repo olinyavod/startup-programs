@@ -40,6 +40,12 @@ namespace StartUpPrograms.ViewModels
 			set => SetProperty(() => AutoRunType, value);
 		}
 
+		public bool IsVerify
+		{
+			get => GetProperty(() => IsVerify);
+			set => SetProperty(() => IsVerify, value);
+		}
+
 		public void Open()
 		{
 			ShellHelper.OpenExplorer(FullFilePath);

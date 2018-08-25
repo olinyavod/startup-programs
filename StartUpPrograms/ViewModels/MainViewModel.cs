@@ -83,7 +83,7 @@ namespace StartUpPrograms.ViewModels
 			catch (Exception ex)
 			{
 				//TODO: Logging
-				CurrentStatus = Properties.Resources.ScanError;
+				CurrentStatus = $"{Properties.Resources.ScanError} ({ex.Message})";
 			}
 		}
 

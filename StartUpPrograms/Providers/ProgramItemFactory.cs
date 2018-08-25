@@ -21,11 +21,15 @@ namespace StartUpPrograms.Providers
 		{
 			var hasCert = false;
 			var company = string.Empty;
+			var isVerify = false;
 			try
 			{
-				var certificate = X509Certificate.CreateFromSignedFile(filePath);
+				var certificate = new X509Certificate2(filePath);//.CreateFromSignedFile(filePath);
+				
 				hasCert = true;
 				company = GetCompany(certificate.Subject);
+				if (certificate is X509Certificate2 c)
+					isVerify = c.Verify();
 			}
 			catch (CryptographicException)
 			{
@@ -42,6 +46,7 @@ namespace StartUpPrograms.Providers
 				AutoRunType = type,
 				FullFilePath = filePath,
 				Company = company,
+				IsVerify = isVerify,
 				HasCertificate = hasCert,
 				Name = Path.GetFileNameWithoutExtension(filePath)
 			};
