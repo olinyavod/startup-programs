@@ -147,6 +147,9 @@
   <data name="NameColumn" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="OpenFolderMenu" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
   <data name="PathColumn" xml:space="preserve">
     <value>Path</value>
   </data>

@@ -1,4 +1,6 @@
-﻿namespace StartUpPrograms.ViewModels
+﻿using StartUpPrograms.Providers;
+
+namespace StartUpPrograms.ViewModels
 {
 	public class ProgramItemViewModel : ViewModelBase
 	{
@@ -36,6 +38,11 @@
 		{
 			get => GetProperty(() => AutoRunType);
 			set => SetProperty(() => AutoRunType, value);
+		}
+
+		public void Open()
+		{
+			ShellHelper.OpenExplorer(FullFilePath);
 		}
 	}
 }

@@ -151,6 +151,15 @@ namespace StartUpPrograms.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Open folder.
+        /// </summary>
+        public static string OpenFolderMenu {
+            get {
+                return ResourceManager.GetString("OpenFolderMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Path.
         /// </summary>
         public static string PathColumn {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using StartUpPrograms.ViewModels;
 using TaskScheduler;
 
@@ -11,47 +10,54 @@ namespace StartUpPrograms.Providers
 {
 	class SchedulerAutoRunFInder : IAutoRunFinder
 	{
-		private readonly CancellationTokenSource _tokenSource;
 		private readonly IProgramItemFactory _factory;
 		private Action<string> _onChangedStatus;
+		private bool _isStoped;
 
-		public SchedulerAutoRunFInder(CancellationTokenSource tokenSource, IProgramItemFactory factory)
+		public SchedulerAutoRunFInder(IProgramItemFactory factory)
 		{
-			_tokenSource = tokenSource;
 			_factory = factory;
 		}
 
-		public async Task LoadAsync(ICollection<ProgramItemViewModel> collection)
+		public IEnumerable<ProgramItemViewModel> Run()
 		{
-			var scheduler = System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext();
-			
-			var items = new List<ProgramItemViewModel>();
-			await Task.Factory.StartNew(() =>
-			{
-				var taskScheduler = new TaskScheduler.TaskScheduler();
+			_isStoped = false;
+			var taskScheduler = new TaskScheduler.TaskScheduler();
 				taskScheduler.Connect();
 				if (taskScheduler.GetFolder(@"\") is ITaskFolder rootFolder)
-					LoadFromFolder(rootFolder, items);
-			}, _tokenSource.Token, TaskCreationOptions.RunContinuationsAsynchronously, scheduler);
-			foreach (var item in items)
-			{
-				collection.Add(item);
-			}
+					foreach (var item in LoadFromFolder(rootFolder))
+					{
+						if(_isStoped)
+							throw new OperationCanceledException();
 
-
+						yield return item;
+					}
 		}
 
-		private void LoadFromFolder(ITaskFolder folder, ICollection<ProgramItemViewModel> collection)
+		public void Stop()
 		{
-			var items = GetTasks(folder).ToArray();
-			foreach (var item in items)
+			_isStoped = true;
+		}
+
+		private IEnumerable<ProgramItemViewModel> LoadFromFolder(ITaskFolder folder)
+		{
+			_onChangedStatus?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, folder.Path));
+			foreach (var item in GetTasks(folder))
 			{
-				collection.Add(item);
+				if (_isStoped)
+					throw new OperationCanceledException();
+
+				yield return item;
 			}
 
 			foreach (ITaskFolder childFolder in folder.GetFolders(0))
 			{
-				LoadFromFolder(childFolder, collection);
+				foreach (var item in LoadFromFolder(childFolder))
+				{
+					if (_isStoped)
+						throw new OperationCanceledException();
+					yield return item;
+				}
 			}
 		}
 
@@ -59,8 +65,8 @@ namespace StartUpPrograms.Providers
 		{
 			foreach (IRegisteredTask task in folder.GetTasks(0))
 			{
-				if(_tokenSource.IsCancellationRequested)
-					yield break;
+				if(_isStoped)
+					throw new OperationCanceledException();
 				if (task.Enabled)
 				{
 					foreach (var action in task.Definition.Actions.OfType<IExecAction>())

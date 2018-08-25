@@ -8,7 +8,9 @@ namespace StartUpPrograms.Providers
 {
 	public interface IAutoRunFinder
 	{
-		Task LoadAsync(ICollection<ProgramItemViewModel> collection);
+		IEnumerable<ProgramItemViewModel> Run();
+
+		void Stop();
 
 		void OnChangedStatus(Action<string> onChanged);
 	}

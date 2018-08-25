@@ -75,7 +75,7 @@
     <Compile Include="Providers\ProgramItemFactory.cs" />
     <Compile Include="Providers\RegistryAutoRunFinder.cs" />
     <Compile Include="Providers\SchedulerAutoRunFInder.cs" />
-    <Compile Include="Providers\ShortcutHelper.cs" />
+    <Compile Include="Providers\ShellHelper.cs" />
     <Compile Include="Providers\StartMenuAutoRunFinder.cs" />
     <Compile Include="ViewModels\AutoRunType.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

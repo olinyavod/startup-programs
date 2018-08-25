@@ -4,7 +4,7 @@ using Shell32;
 
 namespace StartUpPrograms.Providers
 {
-	public static class ShortcutHelper
+	public static class ShellHelper
 	{
 		private static FolderItem GetFolderItem(Shell shell, string path)
 		{
@@ -44,6 +44,12 @@ namespace StartUpPrograms.Providers
 			}
 
 			return new Tuple<string, string>(string.Empty, string.Empty);
+		}
+
+		public static void OpenExplorer(string fullFilePath)
+		{
+			var shell = new Shell();
+			shell.Open(Path.GetDirectoryName(fullFilePath));
 		}
 	}
 }

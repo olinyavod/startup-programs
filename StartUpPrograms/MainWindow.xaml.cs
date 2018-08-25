@@ -26,7 +26,7 @@ namespace StartUpPrograms
 		public MainWindow()
 		{
 			InitializeComponent();
-			_mainViewModel = new MainViewModel();
+			_mainViewModel = new MainViewModel(Dispatcher);
 
 			DataContext = _mainViewModel;
 
@@ -38,6 +38,16 @@ namespace StartUpPrograms
 			var command = _mainViewModel.RefreshListCommand;
 			if (command.CanExecute(null))
 				command.Execute(null);
+		}
+
+		private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			if (e.OriginalSource is FrameworkElement el 
+			    && el.DataContext is ProgramItemViewModel item
+			    && _mainViewModel.OpenFolderCommand.CanExecute(item))
+			{
+				_mainViewModel.OpenFolderCommand.Execute(item);
+			}
 		}
 	}
 }

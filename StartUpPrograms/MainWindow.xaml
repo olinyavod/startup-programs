@@ -19,6 +19,12 @@
 		<converters:FilePathToImageSourceConverter x:Key="FilePathToImageSourceConverter"/>
 		<converters:AutoRunTypeToImageSourceConverter x:Key="AutoRunTypeToImageSourceConverter"/>
 		<converters:AutoRunTypeToStringConverter x:Key="AutoRunTypeToStringConverter"/>
+		<ContextMenu x:Key="MainContextMenu">
+			<MenuItem FontWeight="Bold"
+					  Header="{x:Static props:Resources.OpenFolderMenu}"
+			          Command="{Binding OpenFolderCommand}"
+			          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+		</ContextMenu>
 	</Window.Resources>
 	<DockPanel>
 		<Menu DockPanel.Dock="Top">
@@ -34,7 +40,7 @@
 		</Menu>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem Content="{Binding CurrentStatus}"/>
-			<StatusBarItem Content="{Binding RefreshListCommand}"
+			<StatusBarItem Content="{Binding}"
 			               Visibility="{Binding RefreshListCommand.IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
 				<StatusBarItem.ContentTemplate>
 					<DataTemplate>
@@ -50,7 +56,10 @@
 				</StatusBarItem.ContentTemplate>
 			</StatusBarItem>
 		</StatusBar>
-		<ListView ItemsSource="{Binding ItemsSource}">
+		<ListView ItemsSource="{Binding ItemsSource}"
+				  x:Name="ProgramsList"
+		          MouseDoubleClick="Control_OnMouseDoubleClick"
+		          ContextMenu="{StaticResource MainContextMenu}">
 			<ListView.View>
 				<GridView>
 					<GridView.Columns>

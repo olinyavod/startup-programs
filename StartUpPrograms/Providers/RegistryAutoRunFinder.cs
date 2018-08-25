@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 using StartUpPrograms.ViewModels;
 
@@ -13,18 +10,18 @@ namespace StartUpPrograms.Providers
 {
 	class RegistryAutoRunFinder : IAutoRunFinder
 	{
-		private readonly CancellationTokenSource _tokenSource;
+		private bool _isStoped;
 		private readonly IProgramItemFactory _factory;
 		private Action<string> _onChanged;
 
-		public RegistryAutoRunFinder(CancellationTokenSource tokenSource, IProgramItemFactory factory)
+		public RegistryAutoRunFinder(IProgramItemFactory factory)
 		{
-			_tokenSource = tokenSource;
 			_factory = factory;
 		}
 
-		public async Task LoadAsync(ICollection<ProgramItemViewModel> collection)
+		public IEnumerable<ProgramItemViewModel> Run()
 		{
+			_isStoped = false;
 			var keys = new[]
 			{
 				Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"),
@@ -36,14 +33,12 @@ namespace StartUpPrograms.Providers
 			{
 				foreach (var key in keys)
 				{
-					if (_tokenSource.IsCancellationRequested)
-						return;
+					if (_isStoped)
+						throw new OperationCanceledException();
 					_onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
-					var list = await Task.Run(() => GetFromRegistry(key).ToArray(), _tokenSource.Token);
-
-					foreach (var item in list)
+					foreach (var item in GetFromRegistry(key))
 					{
-						collection.Add(item);
+						yield return item;
 					}
 				}
 			}
@@ -56,10 +51,13 @@ namespace StartUpPrograms.Providers
 			}
 		}
 
+		public void Stop()
+		{
+			_isStoped = true;
+		}
+
 		private Tuple<string, string> GetPathAndArguments(string value)
 		{
-			var invalidPathChars = Path.GetInvalidPathChars();
-			
 			if (File.Exists(value))
 				return new Tuple<string, string>(Path.GetFullPath(value), string.Empty);
 
@@ -78,14 +76,13 @@ namespace StartUpPrograms.Providers
 		{
 			foreach (var name in key.GetValueNames())
 			{
-				if(_tokenSource.IsCancellationRequested)
-					yield break;
+				if(_isStoped)
+					throw new OperationCanceledException();
 				
 				var value = GetPathAndArguments(key.GetValue(name).ToString());
 				var path = value.Item1;
 				var args = value.Item2;
 		
-				
 				if (File.Exists(path))
 					yield return _factory.Create(path, args, AutoRunType.Registry);
 			}
