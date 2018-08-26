@@ -9,7 +9,6 @@ namespace StartUpPrograms.Providers
 	class StartMenuAutoRunFinder : IAutoRunFinder
 	{
 		private readonly IProgramItemFactory _factory;
-		private Action<string> _onChanged;
 		private bool _isStoped;
 
 		public StartMenuAutoRunFinder(IProgramItemFactory factory)
@@ -17,7 +16,7 @@ namespace StartUpPrograms.Providers
 			_factory = factory;
 		}
 
-		public IEnumerable<ProgramItemViewModel> Run()
+		public IEnumerable<ProgramItemViewModel> Run(Action<string> onChanged)
 		{
 			_isStoped = false;
 			var directories = new[]
@@ -30,7 +29,7 @@ namespace StartUpPrograms.Providers
 				if (_isStoped)
 					throw new OperationCanceledException();
 
-				_onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
+				onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
 				
 				foreach (var item in GetFromDirectory(key))
 				{
@@ -64,11 +63,6 @@ namespace StartUpPrograms.Providers
 				}
 				yield return _factory.Create(filePath, arguments, AutoRunType.StartMenu);
 			}
-		}
-
-		public void OnChangedStatus(Action<string> onChanged)
-		{
-			_onChanged = onChanged;
 		}
 	}
 }

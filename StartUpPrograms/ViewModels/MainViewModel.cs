@@ -18,7 +18,6 @@ namespace StartUpPrograms.ViewModels
 	{
 		private readonly Dispatcher _mainDispatcher;
 		private readonly IEnumerable<IAutoRunFinder> _finders;
-		private IAutoRunFinder _currentFinder;
 
 		public ObservableCollection<ProgramItemViewModel> ItemsSource
 		{
@@ -41,11 +40,6 @@ namespace StartUpPrograms.ViewModels
 				new StartMenuAutoRunFinder(factory),
 				new SchedulerAutoRunFInder(factory),
 			};
-
-			foreach (var finder in _finders)
-			{
-				finder.OnChangedStatus(OnChangesStatus);
-			}
 
 			_mainDispatcher = mainDispatcher;
 
@@ -87,7 +81,19 @@ namespace StartUpPrograms.ViewModels
 			}
 		}
 
-		Task RunRefresh(IAutoRunFinder finder)
+		private void AddNewItems(IEnumerable<ProgramItemViewModel> newItems)
+		{
+			_mainDispatcher.BeginInvoke(new Action<IEnumerable<ProgramItemViewModel>>(items =>
+				{
+					foreach (var i in items)
+					{
+						ItemsSource.Add(i);
+					}
+				}),
+				newItems);
+		}
+
+		private Task RunRefresh(IAutoRunFinder finder)
 		{
 			var tcs = new TaskCompletionSource<bool>();
 
@@ -96,14 +102,18 @@ namespace StartUpPrograms.ViewModels
 				try
 				{
 					var f = (IAutoRunFinder) state;
-					_mainDispatcher.BeginInvoke(new Action<IEnumerable<ProgramItemViewModel>>(items =>
+					var newItems = new List<ProgramItemViewModel>();
+					foreach (var item in f.Run(OnChangesStatus))
+					{
+						newItems.Add(item);
+						if (newItems.Count == 5)
 						{
-							foreach (var i in items)
-							{
-								ItemsSource.Add(i);
-							}
-						}),
-						f.Run().ToList());
+							AddNewItems(newItems.ToArray());
+							newItems.Clear();
+						}
+					}
+
+					AddNewItems(newItems);
 
 					tcs.TrySetResult(true);
 				}
@@ -114,10 +124,6 @@ namespace StartUpPrograms.ViewModels
 				catch (Exception ex)
 				{
 					tcs.TrySetException(ex);
-				}
-				finally
-				{
-					_currentFinder = null;
 				}
 			})
 			{

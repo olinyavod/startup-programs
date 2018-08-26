@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Microsoft.Win32;
 using StartUpPrograms.ViewModels;
 
@@ -12,14 +11,13 @@ namespace StartUpPrograms.Providers
 	{
 		private bool _isStoped;
 		private readonly IProgramItemFactory _factory;
-		private Action<string> _onChanged;
 
 		public RegistryAutoRunFinder(IProgramItemFactory factory)
 		{
 			_factory = factory;
 		}
 
-		public IEnumerable<ProgramItemViewModel> Run()
+		public IEnumerable<ProgramItemViewModel> Run(Action<string> onChanged)
 		{
 			_isStoped = false;
 			var keys = new[]
@@ -35,7 +33,7 @@ namespace StartUpPrograms.Providers
 				{
 					if (_isStoped)
 						throw new OperationCanceledException();
-					_onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
+					onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, key));
 					foreach (var item in GetFromRegistry(key))
 					{
 						yield return item;
@@ -86,12 +84,6 @@ namespace StartUpPrograms.Providers
 				if (File.Exists(path))
 					yield return _factory.Create(path, args, AutoRunType.Registry);
 			}
-		}
-
-		public void OnChangedStatus(Action<string> onChanged)
-		{
-			_onChanged = onChanged;
-
 		}
 	}
 }

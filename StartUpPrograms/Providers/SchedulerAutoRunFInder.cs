@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using StartUpPrograms.ViewModels;
 using TaskScheduler;
 
@@ -11,7 +10,6 @@ namespace StartUpPrograms.Providers
 	class SchedulerAutoRunFInder : IAutoRunFinder
 	{
 		private readonly IProgramItemFactory _factory;
-		private Action<string> _onChangedStatus;
 		private bool _isStoped;
 
 		public SchedulerAutoRunFInder(IProgramItemFactory factory)
@@ -19,13 +17,13 @@ namespace StartUpPrograms.Providers
 			_factory = factory;
 		}
 
-		public IEnumerable<ProgramItemViewModel> Run()
+		public IEnumerable<ProgramItemViewModel> Run(Action<string> onChanged)
 		{
 			_isStoped = false;
 			var taskScheduler = new TaskScheduler.TaskScheduler();
 				taskScheduler.Connect();
 				if (taskScheduler.GetFolder(@"\") is ITaskFolder rootFolder)
-					foreach (var item in LoadFromFolder(rootFolder))
+					foreach (var item in LoadFromFolder(onChanged, rootFolder))
 					{
 						if(_isStoped)
 							throw new OperationCanceledException();
@@ -39,9 +37,9 @@ namespace StartUpPrograms.Providers
 			_isStoped = true;
 		}
 
-		private IEnumerable<ProgramItemViewModel> LoadFromFolder(ITaskFolder folder)
+		private IEnumerable<ProgramItemViewModel> LoadFromFolder(Action<string> onChanged, ITaskFolder folder)
 		{
-			_onChangedStatus?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, folder.Path));
+			onChanged?.Invoke(string.Format(Properties.Resources.CurrentStatusMessage, folder.Path));
 			foreach (var item in GetTasks(folder))
 			{
 				if (_isStoped)
@@ -52,7 +50,7 @@ namespace StartUpPrograms.Providers
 
 			foreach (ITaskFolder childFolder in folder.GetFolders(0))
 			{
-				foreach (var item in LoadFromFolder(childFolder))
+				foreach (var item in LoadFromFolder(onChanged, childFolder))
 				{
 					if (_isStoped)
 						throw new OperationCanceledException();
@@ -77,11 +75,6 @@ namespace StartUpPrograms.Providers
 					}
 				}
 			}
-		}
-
-		public void OnChangedStatus(Action<string> onChanged)
-		{
-			_onChangedStatus = onChanged;
 		}
 	}
 }
