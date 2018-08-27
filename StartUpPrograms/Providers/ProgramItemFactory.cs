@@ -47,7 +47,7 @@ namespace StartUpPrograms.Providers
 
 		private string GetCompany(string subject)
 		{
-			return Regex.Match(subject, "(CN=\"(?<company>.+?)\")|(CN=(?<company>.+?)\\,)")
+			return Regex.Match(subject, "(CN=\"(?<company>.+?)\")|(CN=(?<company>.+?)\\,)|(?<company>O=\"(?<company>.+?)\")|(O=(?<company>.+?)\\,)")
 				.Groups["company"]
 				.Value;
 		}
